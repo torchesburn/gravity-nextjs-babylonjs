@@ -7,16 +7,20 @@ import {
   Color4,
   HemisphericLight,
   Scene,
+  SceneLoader,
 } from '@babylonjs/core'
 import SceneComponent from 'babylonjs-hook'
 import { Attractor } from '../scripts/attractor'
 import { MovingBody } from '../scripts/movingBody'
 
+import serializedData from './scene.json';
+ 
+
 let attractor: Attractor
 let body: MovingBody
 
 const onSceneReady = (scene: Scene) => {
-  scene.clearColor = new Color4(0, 0, 0, 1.0)
+  // scene.clearColor = new Color4(0, 0, 0, 1.0)
 
   const canvas = scene.getEngine().getRenderingCanvas()
   canvas!.width = window.innerWidth
@@ -38,6 +42,12 @@ const onSceneReady = (scene: Scene) => {
   light2.intensity = 0.7
 
   attractor = new Attractor(new Vector3(0, 0, 0), 1.0, scene)
+
+    
+    SceneLoader.Append("", `data:${JSON.stringify(serializedData)}`, scene, function (scene) {
+      // do something with the scene
+      console.log('loaded');
+    });
 
   body = new MovingBody(
     new Vector3(3.0, 0.0, 3.0), // position
